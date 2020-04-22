@@ -20,7 +20,7 @@ from pylab import *
 
 
 
-data = pd.read_csv('C:/Users/mulej/Desktop/Petrol/Weather-prediction-ML/Excel-data/Project-ML-data.csv', names=['all_datetimes', 'wind_dir', 'wind_speed'], sep=';')
+data = pd.read_csv('C:/Users/mulej/Desktop/Petrol/Weather-prediction-ML/Excel-data/Project-ML-data-old.csv', names=['all_datetimes', 'wind_dir', 'wind_speed'], sep=';')
 print(data)
 # described = data.describe()
 # print(described)
