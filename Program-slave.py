@@ -20,9 +20,9 @@ from pylab import *
 
 
 
-data = pd.read_csv('C:/Users/mulej/Desktop/Petrol/Weather-prediction-ML/Excel-data/Project-ML-data.csv', names=['all_datetimes', 'wind_dir', 'wind_speed'], sep=';')
-print(data)
-described = data.describe()
+data = pd.read_csv('C:/Users/mulej/Desktop/Petrol/Weather-prediction-ML/Excel-data/Project-ML-data-extended.csv', names=['all_datetimes', 'wind_dir', 'wind_speed', 'power'], sep=';')
+# print(data)
+# described = data.describe()
 # print(described)
 
 
@@ -31,7 +31,9 @@ described = data.describe()
 def train_data():
     y = data.wind_speed
     X = data.drop(["wind_speed"], axis=1)
-    # X = X.drop(["wind_dir"], axis=1)
+
+
+    
     
     # plt.scatter(data.all_datetimes, data.wind_speed)
     # plt.show()
@@ -54,22 +56,21 @@ def train_data():
 
 
 
-
     ## Standardizacija
     # Proces:
     # 1. Fit the transformer on the training set (saving the means and standard deviations)
     # 2. Apply the transformer to the training set (scaling the training data)
     # 3. Apply the transformer to the test set (using the same means and standard deviations)
-    scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train_scaled = scaler.transform(X_train)
+    # scaler = preprocessing.StandardScaler().fit(X_train)
+    # X_train_scaled = scaler.transform(X_train)
+    # print(X_train_scaled)
 
-    test_scaler = preprocessing.StandardScaler().fit(X_test)
-    X_test_scaled = scaler.transform(X_test)
+    # test_scaler = preprocessing.StandardScaler().fit(X_test)
+    # X_test_scaled = scaler.transform(X_test)
 
 
     ## Declaring data preprocessing steps
-    # a modeling pipeline that first transforms the data using StandardScaler() 
-    # and then fits a model using a random forest regressor.
+    # a modeling pipeline that first transforms the data using StandardScaler() and then fits a model using a random forest regressor.
     pipeline = make_pipeline(preprocessing.StandardScaler(), RandomForestRegressor(n_estimators=100))
     ## Declare hyperparameters to tune
     hyperparameters = { 'randomforestregressor__max_features' : ['auto', 'sqrt', 'log2'], 
@@ -79,22 +80,23 @@ def train_data():
     ## Tune model using cross-validation pipeline (Več opcij kateri model vzameš)
     clf = GridSearchCV(pipeline, hyperparameters, cv=10)
     # clf = LinearRegression()
-    # clf = tree.DecisionTreeClassifier()
+    
     clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+    pred = clf.predict(X_test)
+    
 
-    TestScore = r2_score(y_test, y_pred) ## Score regresije. Blizu 1: dober rezultat, bližje 0: slab rezultat. 
-    meanSquaredError = mean_squared_error(y_test, y_pred)
+    TestScore = r2_score(y_test, pred) ## Score regresije. Blizu 1: dober rezultat, bližje 0: slab rezultat.
+    meanSquaredError = mean_squared_error(y_test, pred)
     print('The test score is: %.2f' % TestScore)
-    print('The mean squared error is: %.2f' % mean_squared_error(y_test, y_pred))
+    print('The mean squared error is: %.2f' % mean_squared_error(y_test, pred))
     
 
     ## Model se shrani za kasnejšo uporabo
-    joblib.dump(clf, 'weather_predictor.pkl')
+    joblib.dump(clf, 'weather_predictor-slave.pkl')
 
 
 
-## Ta del je samo za vpogled kakšno je bilo vreme v preteklosti. Trenutno sploh ni uporabljen
+## Ta del je samo za vpogled kakšno je bilo vreme v preteklosti. NI UPORABLJEN.
 def get_the_weather(dates):
     wind = data.wind_speed
     all_dates = data.all_datetimes
@@ -102,7 +104,7 @@ def get_the_weather(dates):
 
 
 def predict_weather():
-    clf = joblib.load('weather_predictor.pkl')
+    clf = joblib.load('weather_predictor-slave.pkl')
     print('Enter a date you would like to predict')
     print('\n')
     option = input('Year: ')
@@ -145,6 +147,8 @@ def run_menu():
     print('\n')
 
     return option
+
+
 
 
 def run_program(option):
