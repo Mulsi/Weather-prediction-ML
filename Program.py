@@ -92,7 +92,7 @@ def train_data():
     
 
     ## Model se shrani za kasnejšo uporabo
-    joblib.dump(clf, 'weather_predictor-slave.pkl')
+    joblib.dump(clf, 'weather_predictor.pkl')
 
 
 
@@ -104,7 +104,7 @@ def get_the_weather(dates):
 
 
 def predict_weather():
-    clf = joblib.load('weather_predictor-slave.pkl')
+    clf = joblib.load('weather_predictor.pkl')
     print('Enter a date you would like to predict')
     print('\n')
     option = input('Year: ')
