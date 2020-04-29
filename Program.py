@@ -16,8 +16,8 @@ from sklearn import metrics
 
 
 
-data = pd.read_csv('C:/Users/mulej/Desktop/Petrol/Weather-prediction-ML/Excel-data/Project-ML-data.csv', names=['all_datetimes', 'wind_dir', 'wind_speed', 'power'], sep=';')
-# print(data)
+data = pd.read_csv('C:/Users/mulej/Desktop/Petrol/Weather-prediction-ML/Excel-data/Project-ML-data-refined.csv', names=['all_datetimes', 'power', 'wind_dir', 'wind_speed'], sep=';')
+print(data)
 # described = data.describe()
 # print(described)
 
@@ -39,7 +39,7 @@ def train_data():
     new_dates = []
     dates = X.all_datetimes
     for all_datetimes in dates:
-        all_datetimes = datetime.datetime.strptime(all_datetimes, '%Y-%m-%d')
+        all_datetimes = datetime.datetime.strptime(all_datetimes, '%Y-%m-%d %H:%M:%S')
         all_datetimes2 = (all_datetimes - datetime.datetime(1970,1,1)).total_seconds()
         new_dates.append(all_datetimes2)
     X.all_datetimes = new_dates
@@ -90,7 +90,7 @@ def train_data():
     
 
     ## Model se shrani za kasnejšo uporabo
-    joblib.dump(clf, 'weather_predictor.pkl')
+    joblib.dump(clf, 'weather_predictor_refined.pkl')
 
 
 
@@ -102,7 +102,7 @@ def get_the_weather(dates):
 
 
 def predict_weather():
-    clf = joblib.load('weather_predictor.pkl')
+    clf = joblib.load('weather_predictor_refined.pkl')
     print('Enter a date you would like to predict')
     print('\n')
     option = input('Year: ')
