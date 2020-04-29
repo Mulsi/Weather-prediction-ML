@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import datetime
-import sys
 from datetime import date
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -14,9 +13,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.externals import joblib
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
-from sklearn import tree
-import matplotlib.pyplot as plt
-from pylab import * 
 
 
 
@@ -31,6 +27,7 @@ data = pd.read_csv('C:/Users/mulej/Desktop/Petrol/Weather-prediction-ML/Excel-da
 def train_data():
     y = data.wind_speed
     X = data.drop(["wind_speed"], axis=1)
+
 
 
     
@@ -50,8 +47,8 @@ def train_data():
 
     ## Train and test data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
-    print(X_train.shape)
-    print(X_test.shape)
+    # print(X_train.shape)
+    # print(X_test.shape)
 
 
 
@@ -61,12 +58,12 @@ def train_data():
     # 1. Fit the transformer on the training set (saving the means and standard deviations)
     # 2. Apply the transformer to the training set (scaling the training data)
     # 3. Apply the transformer to the test set (using the same means and standard deviations)
-    # scaler = preprocessing.StandardScaler().fit(X_train)
-    # X_train_scaled = scaler.transform(X_train)
+    scaler = preprocessing.StandardScaler().fit(X_train)
+    X_train_scaled = scaler.transform(X_train)
     # print(X_train_scaled)
 
     # test_scaler = preprocessing.StandardScaler().fit(X_test)
-    # X_test_scaled = scaler.transform(X_test)
+    # X_test_scaled = test_scaler.transform(X_test)
 
 
     ## Declaring data preprocessing steps
@@ -80,6 +77,7 @@ def train_data():
     ## Tune model using cross-validation pipeline (Več opcij kateri model vzameš)
     clf = GridSearchCV(pipeline, hyperparameters, cv=10)
     # clf = LinearRegression()
+
     
     clf.fit(X_train, y_train)
     pred = clf.predict(X_test)
@@ -117,16 +115,17 @@ def predict_weather():
 
     day = str(year) + '-' + str(month) + '-' +str(specific_day)
     day = datetime.datetime.strptime(day, '%Y-%m-%d')
-    # print(day)
     date = (day - datetime.datetime(1970,1,1)).total_seconds()
-    
 
     day_x = str(year) + '-' + str(month) + '-' +str(specific_day)
     day_x = datetime.datetime.strptime(day_x, '%Y-%m-%d')
-    # print(day_x)
     date_x = (day_x - datetime.datetime(1970,1,1)).total_seconds()
 
-    X = [[date, date_x]]
+    day_2x = str(year) + '-' + str(month) + '-' +str(specific_day)
+    day_2x = datetime.datetime.strptime(day_2x, '%Y-%m-%d')
+    date_2x = (day_2x - datetime.datetime(1970,1,1)).total_seconds()
+
+    X = [[date, date_x, date_2x]]
     print('\n')
     print('-' * 48)
     print('The wind speed is predicted to be: ' + str(clf.predict(X)[0]))
