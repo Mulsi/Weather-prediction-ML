@@ -13,6 +13,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.externals import joblib
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
+from matplotlib import pyplot as pp
 
 
 
@@ -46,10 +47,9 @@ def train_data():
 
 
     ## Train and test data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False, random_state=123)
     # print(X_train.shape)
     # print(X_test.shape)
-
 
 
 
@@ -87,6 +87,14 @@ def train_data():
     meanSquaredError = mean_squared_error(y_test, pred)
     print('The test score is: %.2f' % TestScore)
     print('The mean squared error is: %.2f' % mean_squared_error(y_test, pred))
+    
+    y_test.index = pd.to_datetime(data.loc[y_test.index,'all_datetimes'])
+    pred = pd.DataFrame(data=pred, index=y_test.index)
+    pp.figure()
+    pp.plot(y_test, label='y_test')
+    pp.plot(pred, label='pred')
+    pp.legend()
+    pp.show()
     
 
     ## Model se shrani za kasnejšo uporabo
@@ -165,12 +173,7 @@ if __name__ == '__main__':
 
     while True:
         option = run_menu()
-        if option == 9:
+        if option == 2:
             break
         else:
             run_program(option)    
-
-    
-
-
-
