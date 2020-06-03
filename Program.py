@@ -9,11 +9,14 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn import preprocessing
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.externals import joblib
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
-from matplotlib import pyplot as pp
+# from matplotlib import pyplot as pp
+# from pandas.plotting import register_matplotlib_converters
+# register_matplotlib_converters
+
 
 
 
@@ -85,16 +88,18 @@ def train_data():
 
     TestScore = r2_score(y_test, pred) ## Score regresije. Blizu 1: dober rezultat, bližje 0: slab rezultat.
     meanSquaredError = mean_squared_error(y_test, pred)
+    meanAbsolutePercentageError = mean_absolute_error(y_test, pred)
     print('The test score is: %.2f' % TestScore)
-    print('The mean squared error is: %.2f' % mean_squared_error(y_test, pred))
+    print('The mean squared error is: %.2f' % meanSquaredError)
+    print('The mean absolute percentage error is: %.2f' % meanAbsolutePercentageError)
     
-    y_test.index = pd.to_datetime(data.loc[y_test.index,'all_datetimes'])
-    pred = pd.DataFrame(data=pred, index=y_test.index)
-    pp.figure()
-    pp.plot(y_test, label='y_test')
-    pp.plot(pred, label='pred')
-    pp.legend()
-    pp.show()
+    # y_test.index = pd.to_datetime(data.loc[y_test.index,'all_datetimes'])
+    # pred = pd.DataFrame(data=pred, index=y_test.index)
+    # pp.figure()
+    # pp.plot(y_test, label='y_test')
+    # pp.plot(pred, label='pred')
+    # pp.legend()
+    # pp.show()
     
 
     ## Model se shrani za kasnejšo uporabo
@@ -119,17 +124,26 @@ def predict_weather():
     month = option
     option = input('Day: ')
     specific_day = option
+    # option = input('Hour: ')
+    # hour = option
+    # option = input('Minute: ')
+    # minute = option
+    # option = input('Second: ')
+    # second = option
     
 
-    day = str(year) + '-' + str(month) + '-' +str(specific_day)
+    # day = str(year) + '-' + str(month) + '-' + str(specific_day) + ' ' + str(hour) + '-' + str(minute) + '-' + str(second)
+    day = str(year) + '-' + str(month) + '-' + str(specific_day)
     day = datetime.datetime.strptime(day, '%Y-%m-%d')
     date = (day - datetime.datetime(1970,1,1)).total_seconds()
 
-    day_x = str(year) + '-' + str(month) + '-' +str(specific_day)
+    # day_x = str(year) + '-' + str(month) + '-' + str(specific_day)+ ' ' + str(hour) + '-' + str(minute) + '-' + str(second)
+    day_x = str(year) + '-' + str(month) + '-' + str(specific_day)
     day_x = datetime.datetime.strptime(day_x, '%Y-%m-%d')
     date_x = (day_x - datetime.datetime(1970,1,1)).total_seconds()
 
-    day_2x = str(year) + '-' + str(month) + '-' +str(specific_day)
+    # day_2x = str(year) + '-' + str(month) + '-' + str(specific_day)+ ' ' + str(hour) + '-' + str(minute) + '-' + str(second)
+    day_2x = str(year) + '-' + str(month) + '-' + str(specific_day)
     day_2x = datetime.datetime.strptime(day_2x, '%Y-%m-%d')
     date_2x = (day_2x - datetime.datetime(1970,1,1)).total_seconds()
 
